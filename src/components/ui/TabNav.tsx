@@ -41,7 +41,7 @@ const TabNav: React.FC = () => {
                 to={tab.path}
                 className={cn(
                   "flex flex-col sm:flex-row items-center sm:gap-2",
-                  "py-3 px-2 sm:px-4 flex-1 sm:flex-none",
+                  "py-3 px-3 sm:px-4 flex-1 sm:flex-none", // Increased px for mobile
                   "text-xs sm:text-sm font-medium",
                   "transition-all duration-300 ease-in-out",
                   isActive 
@@ -63,6 +63,7 @@ const TabNav: React.FC = () => {
                   )} />
                 </div>
                 <span className={cn(
+                  "text-[10px] sm:text-xs", // Smaller text on mobile
                   isActive && "animate-scale-in"
                 )}>{tab.name}</span>
               </Link>

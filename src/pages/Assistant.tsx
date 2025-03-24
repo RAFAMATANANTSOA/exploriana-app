@@ -1,6 +1,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
-import { Send, Mic, Camera, Image as ImageIcon, MessageSquare, Map } from "lucide-react";
+import { Send, Mic, Camera, Image as ImageIcon, MessageSquare, Map, Navigation } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import AnimatedPage from "@/components/layout/AnimatedPage";
 import ChatMessage from "@/components/ui/ChatMessage";
 import { Button } from "@/components/ui/button";
@@ -15,6 +16,7 @@ interface Message {
 }
 
 const Assistant: React.FC = () => {
+  const navigate = useNavigate();
   const [activeMode, setActiveMode] = useState<"guide" | "planner">("guide");
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -27,7 +29,10 @@ const Assistant: React.FC = () => {
   const [plannerPrompt, setPlannerPrompt] = useState("");
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const [showMapButton, setShowMapButton] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   // Scroll to bottom when messages change
   useEffect(() => {
@@ -74,6 +79,9 @@ const Assistant: React.FC = () => {
           "Your beach vacation in Hawaii could include visits to Waikiki Beach, Diamond Head, and Pearl Harbor."
         ];
         response = planResponses[Math.floor(Math.random() * planResponses.length)];
+        
+        // Show map button after generating a plan
+        setShowMapButton(true);
       }
       
       const aiMessage: Message = {
@@ -131,12 +139,53 @@ const Assistant: React.FC = () => {
       };
       
       setMessages(prev => [...prev, aiMessage]);
+      
+      // Show map button after generating a plan
+      setShowMapButton(true);
     }, 1500);
+  };
+
+  const startTour = () => {
+    setIsRecording(true);
+    
+    // Simulate microphone activation
+    setTimeout(() => {
+      setIsRecording(false);
+      
+      // Add user message (simulating voice input)
+      const userMessage: Message = {
+        id: Date.now().toString(),
+        content: "Tell me about the local attractions here.",
+        isUser: true,
+        timestamp: new Date()
+      };
+      
+      setMessages(prev => [...prev, userMessage]);
+      
+      // Simulate AI typing response
+      setIsTyping(true);
+      setTimeout(() => {
+        setIsTyping(false);
+        
+        const aiMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          content: "You're near the historic district! To your left is the famous Art Museum built in 1895, known for its Renaissance collection. Ahead about 200 meters is the Central Plaza with its iconic fountain and cafés. Would you like me to tell you more about any of these places?",
+          isUser: false,
+          timestamp: new Date()
+        };
+        
+        setMessages(prev => [...prev, aiMessage]);
+      }, 1500);
+    }, 2000);
+  };
+
+  const viewOnMap = () => {
+    navigate('/trip-planner');
   };
 
   return (
     <AnimatedPage>
-      <div className="page-container h-screen flex flex-col pb-20 sm:pb-16">
+      <div className="page-container h-screen flex flex-col">
         <div className="mb-4">
           <h1 className="text-2xl font-bold">AI Assistant</h1>
           <p className="text-muted-foreground text-sm">Your personal travel companion</p>
@@ -144,7 +193,10 @@ const Assistant: React.FC = () => {
         
         <Tabs 
           value={activeMode} 
-          onValueChange={(value) => setActiveMode(value as "guide" | "planner")}
+          onValueChange={(value) => {
+            setActiveMode(value as "guide" | "planner");
+            setShowMapButton(false);
+          }}
           className="w-full mb-4"
         >
           <TabsList className="glass-card w-full grid grid-cols-2">
@@ -158,9 +210,33 @@ const Assistant: React.FC = () => {
             </TabsTrigger>
           </TabsList>
           
-          <TabsContent value="guide" className="flex-1 flex flex-col">
+          <TabsContent value="guide" className="flex-1 flex flex-col h-[calc(100vh-180px)]">
+            {/* Guide Mode Start Tour Button */}
+            <div className="mb-4">
+              <Button 
+                onClick={startTour} 
+                disabled={isRecording}
+                className="w-full glass-card"
+              >
+                {isRecording ? (
+                  <>
+                    <Mic className="h-4 w-4 mr-2 animate-pulse text-red-500" />
+                    <span>Listening...</span>
+                  </>
+                ) : (
+                  <>
+                    <Navigation className="h-4 w-4 mr-2" />
+                    <span>Start Tour</span>
+                  </>
+                )}
+              </Button>
+            </div>
+            
             {/* Chat Messages */}
-            <div className="flex-1 overflow-y-auto mb-4">
+            <div 
+              ref={messagesContainerRef}
+              className="flex-1 overflow-y-auto mb-4"
+            >
               <div className="space-y-4">
                 {messages.map(message => (
                   <ChatMessage
@@ -184,8 +260,8 @@ const Assistant: React.FC = () => {
               </div>
             </div>
             
-            {/* Message Input */}
-            <div className="glass-card rounded-full p-1 flex items-center">
+            {/* Message Input - Now positioned at bottom */}
+            <div className="glass-card rounded-full p-1 flex items-center mt-auto">
               <div className="flex space-x-1 ml-1">
                 <Button 
                   variant="ghost" 
@@ -229,7 +305,7 @@ const Assistant: React.FC = () => {
             </div>
           </TabsContent>
           
-          <TabsContent value="planner" className="flex-1 flex flex-col">
+          <TabsContent value="planner" className="flex-1 flex flex-col h-[calc(100vh-180px)]">
             <div className="glass-card p-4 mb-4 rounded-lg">
               <h3 className="text-lg font-medium mb-2">Trip Planner</h3>
               <p className="text-sm text-muted-foreground mb-3">
@@ -253,8 +329,11 @@ const Assistant: React.FC = () => {
               </div>
             </div>
             
-            {/* Chat Messages (shared with Guide mode) */}
-            <div className="flex-1 overflow-y-auto mb-4">
+            {/* Chat Messages */}
+            <div 
+              ref={messagesContainerRef}
+              className="flex-1 overflow-y-auto mb-4"
+            >
               <div className="space-y-4">
                 {messages.map(message => (
                   <ChatMessage
@@ -277,6 +356,20 @@ const Assistant: React.FC = () => {
                 <div ref={messagesEndRef} />
               </div>
             </div>
+            
+            {/* View on Map button */}
+            {showMapButton && (
+              <div className="mb-4">
+                <Button 
+                  onClick={viewOnMap}
+                  className="w-full"
+                  variant="default"
+                >
+                  <Map className="h-4 w-4 mr-2" />
+                  <span>View on Map</span>
+                </Button>
+              </div>
+            )}
           </TabsContent>
         </Tabs>
       </div>
