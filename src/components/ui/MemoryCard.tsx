@@ -9,6 +9,7 @@ interface MemoryCardProps {
   location: string;
   note?: string;
   className?: string;
+  style?: React.CSSProperties;
   onClick?: () => void;
 }
 
@@ -18,6 +19,7 @@ const MemoryCard: React.FC<MemoryCardProps> = ({
   location,
   note,
   className,
+  style,
   onClick
 }) => {
   return (
@@ -30,6 +32,7 @@ const MemoryCard: React.FC<MemoryCardProps> = ({
         "animate-fade-in",
         className
       )}
+      style={style}
       onClick={onClick}
     >
       <div className="relative h-[220px]">

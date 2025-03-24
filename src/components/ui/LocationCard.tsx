@@ -9,6 +9,7 @@ interface LocationCardProps {
   location: string;
   rating: number;
   className?: string;
+  style?: React.CSSProperties;
   onClick?: () => void;
 }
 
@@ -18,6 +19,7 @@ const LocationCard: React.FC<LocationCardProps> = ({
   location,
   rating,
   className,
+  style,
   onClick
 }) => {
   return (
@@ -31,6 +33,7 @@ const LocationCard: React.FC<LocationCardProps> = ({
         "animate-fade-in",
         className
       )}
+      style={style}
       onClick={onClick}
     >
       <div className="absolute inset-0">
