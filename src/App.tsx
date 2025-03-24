@@ -26,18 +26,23 @@ const ScrollToTop = () => {
 };
 
 const AppContent = () => {
+  const { pathname } = useLocation();
+  const isMobile = window.innerWidth < 640;
+  
   return (
     <>
       <ScrollToTop />
       <TabNav />
-      <Routes>
-        <Route path="/" element={<Index />} />
-        <Route path="/assistant" element={<Assistant />} />
-        <Route path="/trip-planner" element={<TripPlanner />} />
-        <Route path="/gallery" element={<Gallery />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      <div className={`pt-0 ${isMobile ? 'pb-16' : 'pt-14'}`}>
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/assistant" element={<Assistant />} />
+          <Route path="/trip-planner" element={<TripPlanner />} />
+          <Route path="/gallery" element={<Gallery />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </div>
     </>
   );
 };

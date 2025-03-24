@@ -12,7 +12,7 @@ const TabNav: React.FC = () => {
   const tabs = [
     { name: "Home", path: "/", icon: Home },
     { name: "Assistant", path: "/assistant", icon: MessageSquare },
-    { name: "Trip Planner", path: "/trip-planner", icon: Map },
+    { name: "Map", path: "/trip-planner", icon: Map },
     { name: "Gallery", path: "/gallery", icon: Image },
     { name: "Profile", path: "/profile", icon: User }
   ];
@@ -20,11 +20,13 @@ const TabNav: React.FC = () => {
   return (
     <nav 
       className={cn(
-        "fixed bottom-0 left-0 right-0 z-50",
-        "sm:bottom-auto sm:top-0",
+        "fixed z-50",
         "bg-white/80 dark:bg-black/30 backdrop-blur-lg",
         "border-t sm:border-b border-border/50",
-        "transition-all duration-300 ease-in-out"
+        "transition-all duration-300 ease-in-out",
+        isMobile 
+          ? "bottom-0 left-0 right-0" 
+          : "top-0 left-0 right-0"
       )}
     >
       <div className="container max-w-7xl mx-auto">
