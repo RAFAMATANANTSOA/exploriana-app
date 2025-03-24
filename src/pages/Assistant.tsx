@@ -185,7 +185,7 @@ const Assistant: React.FC = () => {
 
   return (
     <AnimatedPage>
-      <div className="page-container h-screen flex flex-col">
+      <div className="page-container flex flex-col h-[calc(100vh-72px)] sm:h-[calc(100vh-96px)] pt-4">
         <div className="mb-4">
           <h1 className="text-2xl font-bold">AI Assistant</h1>
           <p className="text-muted-foreground text-sm">Your personal travel companion</p>
@@ -197,9 +197,9 @@ const Assistant: React.FC = () => {
             setActiveMode(value as "guide" | "planner");
             setShowMapButton(false);
           }}
-          className="w-full mb-4"
+          className="w-full flex-1 flex flex-col"
         >
-          <TabsList className="glass-card w-full grid grid-cols-2">
+          <TabsList className="glass-card w-full grid grid-cols-2 mb-4">
             <TabsTrigger value="guide" className="flex items-center gap-2">
               <MessageSquare className="w-4 h-4" />
               <span>Guide Mode</span>
@@ -210,7 +210,7 @@ const Assistant: React.FC = () => {
             </TabsTrigger>
           </TabsList>
           
-          <TabsContent value="guide" className="flex-1 flex flex-col h-[calc(100vh-180px)]">
+          <TabsContent value="guide" className="flex-1 flex flex-col overflow-hidden">
             {/* Guide Mode Start Tour Button */}
             <div className="mb-4">
               <Button 
@@ -235,7 +235,7 @@ const Assistant: React.FC = () => {
             {/* Chat Messages */}
             <div 
               ref={messagesContainerRef}
-              className="flex-1 overflow-y-auto mb-4"
+              className="flex-1 overflow-y-auto mb-4 pr-1"
             >
               <div className="space-y-4">
                 {messages.map(message => (
@@ -305,7 +305,7 @@ const Assistant: React.FC = () => {
             </div>
           </TabsContent>
           
-          <TabsContent value="planner" className="flex-1 flex flex-col h-[calc(100vh-180px)]">
+          <TabsContent value="planner" className="flex-1 flex flex-col overflow-hidden">
             <div className="glass-card p-4 mb-4 rounded-lg">
               <h3 className="text-lg font-medium mb-2">Trip Planner</h3>
               <p className="text-sm text-muted-foreground mb-3">
@@ -332,7 +332,7 @@ const Assistant: React.FC = () => {
             {/* Chat Messages */}
             <div 
               ref={messagesContainerRef}
-              className="flex-1 overflow-y-auto mb-4"
+              className="flex-1 overflow-y-auto mb-4 pr-1"
             >
               <div className="space-y-4">
                 {messages.map(message => (
