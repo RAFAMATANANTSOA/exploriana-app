@@ -6,7 +6,8 @@ const config: CapacitorConfig = {
   appName: 'exploriana-app',
   webDir: 'dist',
   server: {
-    url: 'https://b9434359-7d78-40a2-b39b-59f4fb469e16.lovableproject.com?forceHideBadge=true',
+    androidScheme: 'https',
+    allowNavigation: ['*.lovable.app', '*.lovableproject.com'],
     cleartext: true
   },
   plugins: {

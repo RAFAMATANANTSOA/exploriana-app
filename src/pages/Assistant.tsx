@@ -1,19 +1,13 @@
 
-import React, { useState, useRef, useEffect } from "react";
-import { Send, Mic, Camera, Image as ImageIcon, MessageSquare, Map, Navigation } from "lucide-react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import AnimatedPage from "@/components/layout/AnimatedPage";
-import ChatMessage from "@/components/ui/ChatMessage";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
-interface Message {
-  id: string;
-  content: string;
-  isUser: boolean;
-  timestamp: Date;
-}
+import { MessageSquare, Map } from "lucide-react";
+import { Message } from "@/components/assistant/ChatMessage";
+import GuideMode from "@/components/assistant/GuideMode";
+import PlannerMode from "@/components/assistant/PlannerMode";
+import Header from "@/components/assistant/Header";
 
 const Assistant: React.FC = () => {
   const navigate = useNavigate();
@@ -31,12 +25,10 @@ const Assistant: React.FC = () => {
   const [isTyping, setIsTyping] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [showMapButton, setShowMapButton] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   // Scroll to bottom when messages change
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    // This will be handled in child components
   }, [messages]);
 
   const handleSendMessage = () => {
@@ -185,11 +177,11 @@ const Assistant: React.FC = () => {
 
   return (
     <AnimatedPage>
-      <div className="page-container flex flex-col h-[calc(100vh-72px)] sm:h-[calc(100vh-96px)] pt-4">
-        <div className="mb-4">
-          <h1 className="text-2xl font-bold">AI Assistant</h1>
-          <p className="text-muted-foreground text-sm">Your personal travel companion</p>
-        </div>
+      <div className="page-container flex flex-col h-[calc(100vh-72px)] sm:h-[calc(100vh-96px)]">
+        <Header 
+          title="AI Assistant" 
+          subtitle="Your personal travel companion" 
+        />
         
         <Tabs 
           value={activeMode} 
@@ -199,7 +191,7 @@ const Assistant: React.FC = () => {
           }}
           className="w-full flex-1 flex flex-col"
         >
-          <TabsList className="glass-card w-full grid grid-cols-2 mb-4">
+          <TabsList className="glass-card w-full grid grid-cols-2 mb-4 sticky top-[72px] z-10">
             <TabsTrigger value="guide" className="flex items-center gap-2">
               <MessageSquare className="w-4 h-4" />
               <span>Guide Mode</span>
@@ -210,166 +202,36 @@ const Assistant: React.FC = () => {
             </TabsTrigger>
           </TabsList>
           
-          <TabsContent value="guide" className="flex-1 flex flex-col overflow-hidden">
-            {/* Guide Mode Start Tour Button */}
-            <div className="mb-4">
-              <Button 
-                onClick={startTour} 
-                disabled={isRecording}
-                className="w-full glass-card"
-              >
-                {isRecording ? (
-                  <>
-                    <Mic className="h-4 w-4 mr-2 animate-pulse text-red-500" />
-                    <span>Listening...</span>
-                  </>
-                ) : (
-                  <>
-                    <Navigation className="h-4 w-4 mr-2" />
-                    <span>Start Tour</span>
-                  </>
-                )}
-              </Button>
-            </div>
-            
-            {/* Chat Messages */}
-            <div 
-              ref={messagesContainerRef}
-              className="flex-1 overflow-y-auto mb-4 pr-1"
-            >
-              <div className="space-y-4">
-                {messages.map(message => (
-                  <ChatMessage
-                    key={message.id}
-                    message={message.content}
-                    isUser={message.isUser}
-                    timestamp={message.timestamp}
-                  />
-                ))}
-                
-                {isTyping && (
-                  <ChatMessage
-                    message=""
-                    isUser={false}
-                    timestamp={new Date()}
-                    isTyping={true}
-                  />
-                )}
-                
-                <div ref={messagesEndRef} />
-              </div>
-            </div>
-            
-            {/* Message Input - Now positioned at bottom */}
-            <div className="glass-card rounded-full p-1 flex items-center mt-auto">
-              <div className="flex space-x-1 ml-1">
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  className="rounded-full h-9 w-9 text-muted-foreground hover:text-foreground"
-                >
-                  <Camera className="h-5 w-5" />
-                </Button>
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  className="rounded-full h-9 w-9 text-muted-foreground hover:text-foreground"
-                >
-                  <ImageIcon className="h-5 w-5" />
-                </Button>
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  className="rounded-full h-9 w-9 text-muted-foreground hover:text-foreground"
-                >
-                  <Mic className="h-5 w-5" />
-                </Button>
-              </div>
-              
-              <Input
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder="Ask something about your trip..."
-                className="bg-transparent border-0 focus-visible:ring-0 focus-visible:ring-offset-0 flex-1"
-              />
-              
-              <Button 
-                size="icon" 
-                className="rounded-full h-9 w-9 bg-primary text-primary-foreground hover:bg-primary/90"
-                onClick={handleSendMessage}
-                disabled={!input.trim()}
-              >
-                <Send className="h-4 w-4" />
-              </Button>
-            </div>
+          <TabsContent 
+            value="guide" 
+            className="flex-1 flex flex-col h-full overflow-hidden"
+          >
+            <GuideMode
+              messages={messages}
+              isTyping={isTyping}
+              isRecording={isRecording}
+              input={input}
+              setInput={setInput}
+              handleSendMessage={handleSendMessage}
+              handleKeyPress={handleKeyPress}
+              startTour={startTour}
+            />
           </TabsContent>
           
-          <TabsContent value="planner" className="flex-1 flex flex-col overflow-hidden">
-            <div className="glass-card p-4 mb-4 rounded-lg">
-              <h3 className="text-lg font-medium mb-2">Trip Planner</h3>
-              <p className="text-sm text-muted-foreground mb-3">
-                Tell me where and when you want to travel, and I'll create a custom itinerary for you.
-              </p>
-              
-              <div className="flex gap-2">
-                <Input
-                  value={plannerPrompt}
-                  onChange={(e) => setPlannerPrompt(e.target.value)}
-                  onKeyPress={handleKeyPress}
-                  placeholder="E.g., 3 days in San Francisco in October"
-                  className="flex-1"
-                />
-                <Button 
-                  onClick={handleGeneratePlan}
-                  disabled={!plannerPrompt.trim()}
-                >
-                  Generate Plan
-                </Button>
-              </div>
-            </div>
-            
-            {/* Chat Messages */}
-            <div 
-              ref={messagesContainerRef}
-              className="flex-1 overflow-y-auto mb-4 pr-1"
-            >
-              <div className="space-y-4">
-                {messages.map(message => (
-                  <ChatMessage
-                    key={message.id}
-                    message={message.content}
-                    isUser={message.isUser}
-                    timestamp={message.timestamp}
-                  />
-                ))}
-                
-                {isTyping && (
-                  <ChatMessage
-                    message=""
-                    isUser={false}
-                    timestamp={new Date()}
-                    isTyping={true}
-                  />
-                )}
-                
-                <div ref={messagesEndRef} />
-              </div>
-            </div>
-            
-            {/* View on Map button */}
-            {showMapButton && (
-              <div className="mb-4">
-                <Button 
-                  onClick={viewOnMap}
-                  className="w-full"
-                  variant="default"
-                >
-                  <Map className="h-4 w-4 mr-2" />
-                  <span>View on Map</span>
-                </Button>
-              </div>
-            )}
+          <TabsContent 
+            value="planner" 
+            className="flex-1 flex flex-col h-full overflow-hidden"
+          >
+            <PlannerMode
+              messages={messages}
+              isTyping={isTyping}
+              plannerPrompt={plannerPrompt}
+              setPlannerPrompt={setPlannerPrompt}
+              handleGeneratePlan={handleGeneratePlan}
+              handleKeyPress={handleKeyPress}
+              showMapButton={showMapButton}
+              viewOnMap={viewOnMap}
+            />
           </TabsContent>
         </Tabs>
       </div>

@@ -32,8 +32,8 @@ const AppContent = () => {
   return (
     <>
       <ScrollToTop />
-      <TabNav />
-      <div className={`${isMobile ? 'pb-20' : ''} pt-0`}>
+      {pathname !== "/404" && <TabNav />}
+      <div className={`${isMobile && pathname !== "/404" ? 'pb-20' : ''} pt-0`}>
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/assistant" element={<Assistant />} />
