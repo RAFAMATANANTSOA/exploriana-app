@@ -5,7 +5,7 @@ import { Message } from "@/components/assistant/ChatMessage";
 
 export const useAssistantMessages = () => {
   const navigate = useNavigate();
-  const [messages, setMessages] = useState<Message[]>([
+  const [guideMessages, setGuideMessages] = useState<Message[]>([
     {
       id: "1",
       content: "Hello! I'm your AI travel assistant. How can I help you today?",
@@ -13,11 +13,24 @@ export const useAssistantMessages = () => {
       timestamp: new Date()
     }
   ]);
+  const [plannerMessages, setPlannerMessages] = useState<Message[]>([
+    {
+      id: "1",
+      content: "Welcome to the Travel Planner! Tell me where and when you want to travel, and I'll create a custom itinerary for you.",
+      isUser: false,
+      timestamp: new Date()
+    }
+  ]);
+  const [activeMode, setActiveMode] = useState<"guide" | "planner">("guide");
   const [plannerPrompt, setPlannerPrompt] = useState("");
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [showMapButton, setShowMapButton] = useState(false);
+
+  // Get appropriate messages based on active mode
+  const messages = activeMode === "guide" ? guideMessages : plannerMessages;
+  const setMessages = activeMode === "guide" ? setGuideMessages : setPlannerMessages;
 
   const handleSendMessage = () => {
     if (!input.trim()) return;
@@ -79,7 +92,7 @@ export const useAssistantMessages = () => {
       timestamp: new Date()
     };
     
-    setMessages(prev => [...prev, userMessage]);
+    setPlannerMessages(prev => [...prev, userMessage]);
     setPlannerPrompt("");
     
     // Simulate AI typing
@@ -102,7 +115,7 @@ export const useAssistantMessages = () => {
         timestamp: new Date()
       };
       
-      setMessages(prev => [...prev, aiMessage]);
+      setPlannerMessages(prev => [...prev, aiMessage]);
       
       // Show map button after generating a plan
       setShowMapButton(true);
@@ -124,7 +137,7 @@ export const useAssistantMessages = () => {
         timestamp: new Date()
       };
       
-      setMessages(prev => [...prev, userMessage]);
+      setGuideMessages(prev => [...prev, userMessage]);
       
       // Simulate AI typing response
       setIsTyping(true);
@@ -138,7 +151,7 @@ export const useAssistantMessages = () => {
           timestamp: new Date()
         };
         
-        setMessages(prev => [...prev, aiMessage]);
+        setGuideMessages(prev => [...prev, aiMessage]);
       }, 1500);
     }, 2000);
   };
@@ -160,6 +173,8 @@ export const useAssistantMessages = () => {
     handleKeyPress,
     handleGeneratePlan,
     startTour,
-    viewOnMap
+    viewOnMap,
+    activeMode,
+    setActiveMode
   };
 };

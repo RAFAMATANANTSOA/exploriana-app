@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React from "react";
 import AnimatedPage from "@/components/layout/AnimatedPage";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MessageSquare, Map } from "lucide-react";
@@ -9,8 +9,6 @@ import Header from "@/components/assistant/Header";
 import { useAssistantMessages } from "@/hooks/useAssistantMessages";
 
 const Assistant: React.FC = () => {
-  const [activeMode, setActiveMode] = useState<"guide" | "planner">("guide");
-  
   const { 
     messages, 
     input, 
@@ -24,7 +22,9 @@ const Assistant: React.FC = () => {
     handleKeyPress,
     handleGeneratePlan,
     startTour,
-    viewOnMap
+    viewOnMap,
+    activeMode,
+    setActiveMode
   } = useAssistantMessages();
 
   return (

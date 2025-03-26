@@ -30,7 +30,7 @@ const GuideMode: React.FC<GuideModeProps> = ({
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full relative">
       {/* Guide Mode Start Tour Button */}
       <div className="mb-4">
         <Button 
