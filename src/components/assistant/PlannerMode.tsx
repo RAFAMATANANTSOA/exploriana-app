@@ -30,6 +30,7 @@ const PlannerMode: React.FC<PlannerModeProps> = ({
 
   return (
     <div className="flex flex-col h-full">
+      {/* Planner Form */}
       <div className="glass-card p-4 mb-4 rounded-lg">
         <h3 className="text-lg font-medium mb-2">Trip Planner</h3>
         <p className="text-sm text-muted-foreground mb-3">
@@ -53,16 +54,18 @@ const PlannerMode: React.FC<PlannerModeProps> = ({
         </div>
       </div>
       
-      {/* Chat Messages */}
-      <ChatMessages 
-        messages={messages}
-        isTyping={isTyping}
-        messagesEndRef={messagesEndRef}
-      />
+      {/* Chat Messages - using flex-1 to take up available space */}
+      <div className="flex-1 overflow-y-auto mb-4">
+        <ChatMessages 
+          messages={messages}
+          isTyping={isTyping}
+          messagesEndRef={messagesEndRef}
+        />
+      </div>
       
-      {/* View on Map button */}
+      {/* View on Map button - fixed at bottom */}
       {showMapButton && (
-        <div className="mt-auto mb-4 sticky bottom-0 z-10">
+        <div className="w-full">
           <Button 
             onClick={viewOnMap}
             className="w-full"

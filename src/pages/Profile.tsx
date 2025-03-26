@@ -8,33 +8,20 @@ import { toast } from "sonner";
 import ProfileHeader from "@/components/profile/ProfileHeader";
 import SettingsTab from "@/components/profile/SettingsTab";
 import SavedTripsTab from "@/components/profile/SavedTripsTab";
+import { useProfileSettings } from "@/hooks/useProfileSettings";
 
 const Profile: React.FC = () => {
-  const [darkMode, setDarkMode] = useState(false);
-  const [notifications, setNotifications] = useState(true);
-  const [activeTab, setActiveTab] = useState("settings");
-  
-  const toggleDarkMode = (enabled: boolean) => {
-    setDarkMode(enabled);
-    // In a real app, this would toggle dark mode
-    toast.success(`${enabled ? 'Dark' : 'Light'} mode activated`);
-  };
-
-  const handleSaveProfile = () => {
-    toast.success("Profile updated successfully");
-  };
-
-  const handleLogout = () => {
-    toast.info("You have been logged out", {
-      description: "In a real app, this would log you out"
-    });
-  };
-
-  const savedTrips = [
-    { id: 1, name: "Weekend in Paris", date: "May 15-18, 2023" },
-    { id: 2, name: "Tokyo Adventure", date: "Oct 5-15, 2023" },
-    { id: 3, name: "New York City", date: "Dec 22-27, 2023" }
-  ];
+  const { 
+    darkMode, 
+    notifications, 
+    activeTab, 
+    setActiveTab, 
+    toggleDarkMode, 
+    setNotifications, 
+    handleSaveProfile, 
+    handleLogout,
+    savedTrips
+  } = useProfileSettings();
 
   return (
     <AnimatedPage>

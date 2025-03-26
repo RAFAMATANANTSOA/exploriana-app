@@ -51,20 +51,24 @@ const GuideMode: React.FC<GuideModeProps> = ({
         </Button>
       </div>
       
-      {/* Chat Messages */}
-      <ChatMessages 
-        messages={messages}
-        isTyping={isTyping}
-        messagesEndRef={messagesEndRef}
-      />
+      {/* Chat Messages - using flex-1 to take up available space */}
+      <div className="flex-1 overflow-y-auto mb-4">
+        <ChatMessages 
+          messages={messages}
+          isTyping={isTyping}
+          messagesEndRef={messagesEndRef}
+        />
+      </div>
       
-      {/* Message Input */}
-      <ChatInput
-        input={input}
-        setInput={setInput}
-        handleSendMessage={handleSendMessage}
-        handleKeyPress={handleKeyPress}
-      />
+      {/* Message Input - fixed at bottom */}
+      <div className="w-full">
+        <ChatInput
+          input={input}
+          setInput={setInput}
+          handleSendMessage={handleSendMessage}
+          handleKeyPress={handleKeyPress}
+        />
+      </div>
     </div>
   );
 };

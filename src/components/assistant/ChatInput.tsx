@@ -18,7 +18,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
   handleKeyPress
 }) => {
   return (
-    <div className="glass-card rounded-full p-1 flex items-center sticky bottom-0 z-10 mt-auto">
+    <div className="glass-card rounded-full p-1 flex items-center sticky bottom-0 z-10">
       <div className="flex space-x-1 ml-1">
         <Button 
           variant="ghost" 
