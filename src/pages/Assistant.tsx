@@ -58,7 +58,7 @@ const Assistant: React.FC = () => {
           
           <TabsContent 
             value="guide" 
-            className="flex-1 flex flex-col relative overflow-hidden"
+            className="animate-fade-in"
           >
             <GuideMode
               messages={messages}
@@ -74,7 +74,7 @@ const Assistant: React.FC = () => {
           
           <TabsContent 
             value="planner" 
-            className="flex-1 flex flex-col relative overflow-hidden"
+            className="animate-fade-in"
           >
             <PlannerMode
               messages={messages}
