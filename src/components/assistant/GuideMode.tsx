@@ -66,7 +66,7 @@ const GuideMode: React.FC<GuideModeProps> = ({
       </div>
       
       {/* Message Input - fixed at bottom */}
-      <div className="w-full sticky bottom-0">
+      <div className="w-full sticky bottom-1">
         <ChatInput
           input={input}
           setInput={setInput}
