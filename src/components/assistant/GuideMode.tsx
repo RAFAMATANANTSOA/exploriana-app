@@ -4,6 +4,7 @@ import { Message, ChatMessages } from "./ChatMessage";
 import ChatInput from "./ChatInput";
 import { Button } from "@/components/ui/button";
 import { Mic, Navigation } from "lucide-react";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface GuideModeProps {
   messages: Message[];
@@ -51,17 +52,21 @@ const GuideMode: React.FC<GuideModeProps> = ({
         </Button>
       </div>
       
-      {/* Chat Messages - using flex-1 to take up available space */}
-      <div className="flex-1 overflow-y-auto mb-4">
-        <ChatMessages 
-          messages={messages}
-          isTyping={isTyping}
-          messagesEndRef={messagesEndRef}
-        />
+      {/* Chat Messages - scrollable area */}
+      <div className="flex-1 overflow-hidden rounded-md border">
+        <ScrollArea className="h-full pb-4">
+          <div className="p-4">
+            <ChatMessages 
+              messages={messages}
+              isTyping={isTyping}
+              messagesEndRef={messagesEndRef}
+            />
+          </div>
+        </ScrollArea>
       </div>
       
       {/* Message Input - fixed at bottom */}
-      <div className="w-full">
+      <div className="w-full mt-4">
         <ChatInput
           input={input}
           setInput={setInput}

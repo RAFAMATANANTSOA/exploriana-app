@@ -4,6 +4,7 @@ import { Map } from "lucide-react";
 import { Message, ChatMessages } from "./ChatMessage";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface PlannerModeProps {
   messages: Message[];
@@ -54,24 +55,28 @@ const PlannerMode: React.FC<PlannerModeProps> = ({
         </div>
       </div>
       
-      {/* Chat Messages - using flex-1 to take up available space */}
-      <div className="flex-1 overflow-y-auto mb-4">
-        <ChatMessages 
-          messages={messages}
-          isTyping={isTyping}
-          messagesEndRef={messagesEndRef}
-        />
+      {/* Chat Messages - scrollable area */}
+      <div className="flex-1 overflow-hidden rounded-md border">
+        <ScrollArea className="h-full pb-4">
+          <div className="p-4">
+            <ChatMessages 
+              messages={messages}
+              isTyping={isTyping}
+              messagesEndRef={messagesEndRef}
+            />
+          </div>
+        </ScrollArea>
       </div>
       
       {/* View on Map button - fixed at bottom */}
       {showMapButton && (
-        <div className="w-full">
+        <div className="w-full mt-4">
           <Button 
             onClick={viewOnMap}
             className="w-full"
             variant="default"
           >
-            <Map className="h-4 w-4 mr-2" />
+            <Map className="h-4 h-4 mr-2" />
             <span>View on Map</span>
           </Button>
         </div>

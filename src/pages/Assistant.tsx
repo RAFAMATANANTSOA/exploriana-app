@@ -1,17 +1,14 @@
 
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import AnimatedPage from "@/components/layout/AnimatedPage";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MessageSquare, Map } from "lucide-react";
-import { Message } from "@/components/assistant/ChatMessage";
 import GuideMode from "@/components/assistant/GuideMode";
 import PlannerMode from "@/components/assistant/PlannerMode";
 import Header from "@/components/assistant/Header";
 import { useAssistantMessages } from "@/hooks/useAssistantMessages";
 
 const Assistant: React.FC = () => {
-  const navigate = useNavigate();
   const [activeMode, setActiveMode] = useState<"guide" | "planner">("guide");
   
   const { 
@@ -56,37 +53,39 @@ const Assistant: React.FC = () => {
             </TabsTrigger>
           </TabsList>
           
-          <TabsContent 
-            value="guide" 
-            className="animate-fade-in"
-          >
-            <GuideMode
-              messages={messages}
-              isTyping={isTyping}
-              isRecording={isRecording}
-              input={input}
-              setInput={setInput}
-              handleSendMessage={handleSendMessage}
-              handleKeyPress={handleKeyPress}
-              startTour={startTour}
-            />
-          </TabsContent>
-          
-          <TabsContent 
-            value="planner" 
-            className="animate-fade-in"
-          >
-            <PlannerMode
-              messages={messages}
-              isTyping={isTyping}
-              plannerPrompt={plannerPrompt}
-              setPlannerPrompt={setPlannerPrompt}
-              handleGeneratePlan={handleGeneratePlan}
-              handleKeyPress={handleKeyPress}
-              showMapButton={showMapButton}
-              viewOnMap={viewOnMap}
-            />
-          </TabsContent>
+          <div className="flex-1 flex flex-col">
+            <TabsContent 
+              value="guide" 
+              className="flex-1 h-full"
+            >
+              <GuideMode
+                messages={messages}
+                isTyping={isTyping}
+                isRecording={isRecording}
+                input={input}
+                setInput={setInput}
+                handleSendMessage={handleSendMessage}
+                handleKeyPress={handleKeyPress}
+                startTour={startTour}
+              />
+            </TabsContent>
+            
+            <TabsContent 
+              value="planner" 
+              className="flex-1 h-full"
+            >
+              <PlannerMode
+                messages={messages}
+                isTyping={isTyping}
+                plannerPrompt={plannerPrompt}
+                setPlannerPrompt={setPlannerPrompt}
+                handleGeneratePlan={handleGeneratePlan}
+                handleKeyPress={handleKeyPress}
+                showMapButton={showMapButton}
+                viewOnMap={viewOnMap}
+              />
+            </TabsContent>
+          </div>
         </Tabs>
       </div>
     </AnimatedPage>
