@@ -53,7 +53,7 @@ const GuideMode: React.FC<GuideModeProps> = ({
       </div>
       
       {/* Chat Messages - scrollable area */}
-      <div className="flex-1 overflow-hidden rounded-md border">
+      <div className="flex-1 overflow-hidden rounded-md border mb-4">
         <ScrollArea className="h-full pb-4">
           <div className="p-4">
             <ChatMessages 
@@ -66,7 +66,7 @@ const GuideMode: React.FC<GuideModeProps> = ({
       </div>
       
       {/* Message Input - fixed at bottom */}
-      <div className="w-full mt-4">
+      <div className="w-full sticky bottom-0">
         <ChatInput
           input={input}
           setInput={setInput}
