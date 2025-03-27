@@ -25,7 +25,7 @@ const Assistant: React.FC = () => {
     setActiveMode
   } = useAssistantMessages();
   return <AnimatedPage>
-      <div className="page-container flex flex-col h-[calc(100vh-5px)] sm:h-[calc(100vh-96px)]">
+      <div className="page-container flex flex-col h-[calc(100vh-0px)] sm:h-[calc(100vh-96px)]">
         <Header title="AI Assistant" subtitle="Your personal travel companion" />
         
         <Tabs value={activeMode} onValueChange={value => {
