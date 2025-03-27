@@ -38,8 +38,8 @@ const GuideMode: React.FC<GuideModeProps> = ({
 
   return (
     <div className="flex flex-col h-full relative">
-      {/* Fixed content container takes full height minus input height */}
-      <div className="absolute top-0 left-0 right-0 bottom-[60px] flex flex-col overflow-hidden">
+      {/* Fixed content container with explicit calc() height to account for input */}
+      <div className="absolute inset-0 bottom-[60px] flex flex-col">
         {/* Guide Mode Start Tour Button */}
         <div className="p-4 pb-0">
           <Button 
@@ -75,8 +75,8 @@ const GuideMode: React.FC<GuideModeProps> = ({
         </div>
       </div>
       
-      {/* Message Input - absolutely positioned at bottom with no gap */}
-      <div className="absolute bottom-0 left-0 right-0 bg-background">
+      {/* Message Input - fixed at bottom with no gap */}
+      <div className="absolute bottom-0 left-0 right-0 h-[60px] bg-background">
         <ChatInput
           input={input}
           setInput={setInput}

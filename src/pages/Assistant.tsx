@@ -40,7 +40,7 @@ const Assistant: React.FC = () => {
           onValueChange={(value) => {
             setActiveMode(value as "guide" | "planner");
           }}
-          className="w-full flex-1 flex flex-col"
+          className="w-full flex-1 flex flex-col h-full"
         >
           <TabsList className="glass-card w-full grid grid-cols-2 mb-4">
             <TabsTrigger value="guide" className="flex items-center gap-2">
@@ -53,7 +53,7 @@ const Assistant: React.FC = () => {
             </TabsTrigger>
           </TabsList>
           
-          <div className="flex-1 flex flex-col">
+          <div className="flex-1 flex flex-col h-full">
             <TabsContent 
               value="guide" 
               className="flex-1 h-full"
