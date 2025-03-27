@@ -38,8 +38,8 @@ const GuideMode: React.FC<GuideModeProps> = ({
 
   return (
     <div className="flex flex-col h-full relative">
-      {/* Fixed content container with explicit calc() height to account for input */}
-      <div className="absolute inset-0 bottom-[60px] flex flex-col">
+      {/* Content container that takes full height minus input height */}
+      <div className="absolute inset-0 bottom-[60px] flex flex-col overflow-hidden">
         {/* Guide Mode Start Tour Button */}
         <div className="p-4 pb-0">
           <Button 
@@ -61,9 +61,9 @@ const GuideMode: React.FC<GuideModeProps> = ({
           </Button>
         </div>
         
-        {/* Chat Messages - scrollable area that fills available space */}
-        <div className="flex-1 p-4 overflow-hidden">
-          <ScrollArea className="h-full rounded-md border">
+        {/* Chat Messages - scrollable area that fills all remaining space */}
+        <div className="flex-1 p-4 overflow-hidden flex flex-col">
+          <ScrollArea className="h-full min-h-0 flex-1 rounded-md border">
             <div className="p-4">
               <ChatMessages 
                 messages={messages}

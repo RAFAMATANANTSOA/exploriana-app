@@ -53,10 +53,10 @@ const Assistant: React.FC = () => {
             </TabsTrigger>
           </TabsList>
           
-          <div className="flex-1 flex flex-col h-full">
+          <div className="flex-1 flex flex-col h-full min-h-0">
             <TabsContent 
               value="guide" 
-              className="flex-1 h-full"
+              className="flex-1 h-full min-h-0"
             >
               <GuideMode
                 messages={messages}
@@ -72,7 +72,7 @@ const Assistant: React.FC = () => {
             
             <TabsContent 
               value="planner" 
-              className="flex-1 h-full"
+              className="flex-1 h-full min-h-0"
             >
               <PlannerMode
                 messages={messages}

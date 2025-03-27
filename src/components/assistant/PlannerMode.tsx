@@ -55,8 +55,8 @@ const PlannerMode: React.FC<PlannerModeProps> = ({
         </div>
       </div>
       
-      {/* Chat Messages - scrollable area with flex-1 to fill available space */}
-      <div className="flex-1 overflow-hidden rounded-md border">
+      {/* Chat Messages - scrollable area with flex-1 to fill remaining space */}
+      <div className="flex-1 min-h-0 overflow-hidden rounded-md border">
         <ScrollArea className="h-full pb-4">
           <div className="p-4">
             <ChatMessages 
