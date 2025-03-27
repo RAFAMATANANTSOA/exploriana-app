@@ -75,8 +75,8 @@ const GuideMode: React.FC<GuideModeProps> = ({
         </div>
       </div>
       
-      {/* Message Input - absolutely positioned at bottom */}
-      <div className="absolute bottom-0 left-0 right-0 p-4 pt-2 bg-background">
+      {/* Message Input - absolutely positioned at bottom with no gap */}
+      <div className="absolute bottom-0 left-0 right-0 bg-background">
         <ChatInput
           input={input}
           setInput={setInput}
