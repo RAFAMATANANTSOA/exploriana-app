@@ -37,11 +37,11 @@ const GuideMode: React.FC<GuideModeProps> = ({
   }, [messages, isTyping]);
 
   return (
-    <div className="flex flex-col h-full">
-      {/* Tour Button and Chat Messages Container */}
-      <div className="flex-1 flex flex-col overflow-hidden">
+    <div className="flex flex-col h-full relative">
+      {/* Fixed content container takes full height minus input height */}
+      <div className="absolute top-0 left-0 right-0 bottom-[60px] flex flex-col overflow-hidden">
         {/* Guide Mode Start Tour Button */}
-        <div className="mb-4">
+        <div className="p-4 pb-0">
           <Button 
             onClick={startTour} 
             disabled={isRecording}
@@ -61,10 +61,10 @@ const GuideMode: React.FC<GuideModeProps> = ({
           </Button>
         </div>
         
-        {/* Chat Messages - scrollable area */}
-        <div className="flex-1 overflow-hidden rounded-md border mb-4">
-          <ScrollArea className="h-full">
-            <div className="p-4 pb-6">
+        {/* Chat Messages - scrollable area that fills available space */}
+        <div className="flex-1 p-4 overflow-hidden">
+          <ScrollArea className="h-full rounded-md border">
+            <div className="p-4">
               <ChatMessages 
                 messages={messages}
                 isTyping={isTyping}
@@ -75,8 +75,8 @@ const GuideMode: React.FC<GuideModeProps> = ({
         </div>
       </div>
       
-      {/* Message Input - fixed at bottom */}
-      <div className="w-full">
+      {/* Message Input - absolutely positioned at bottom */}
+      <div className="absolute bottom-0 left-0 right-0 p-4 pt-2 bg-background">
         <ChatInput
           input={input}
           setInput={setInput}
