@@ -1,3 +1,4 @@
+
 import React from "react";
 import AnimatedPage from "@/components/layout/AnimatedPage";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -6,6 +7,7 @@ import GuideMode from "@/components/assistant/GuideMode";
 import PlannerMode from "@/components/assistant/PlannerMode";
 import Header from "@/components/assistant/Header";
 import { useAssistantMessages } from "@/hooks/useAssistantMessages";
+
 const Assistant: React.FC = () => {
   const {
     messages,
@@ -24,6 +26,7 @@ const Assistant: React.FC = () => {
     activeMode,
     setActiveMode
   } = useAssistantMessages();
+  
   return <AnimatedPage>
       <div className="page-container flex flex-col h-[calc(100vh-0px)] sm:h-[calc(100vh-96px)]">
         <Header title="AI Assistant" subtitle="Your personal travel companion" />
@@ -55,4 +58,5 @@ const Assistant: React.FC = () => {
       </div>
     </AnimatedPage>;
 };
+
 export default Assistant;

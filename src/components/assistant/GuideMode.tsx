@@ -28,12 +28,19 @@ const GuideMode: React.FC<GuideModeProps> = ({
   startTour
 }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const prevMessagesLengthRef = useRef(messages.length);
   
-  // Auto-scroll to bottom when messages change
+  // Only auto-scroll when messages change (not on initial render)
   useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    // Only scroll when new messages are added or typing status changes
+    if (messages.length > prevMessagesLengthRef.current || 
+        (prevMessagesLengthRef.current === messages.length && isTyping !== undefined)) {
+      if (messagesEndRef.current) {
+        messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+      }
     }
+    
+    prevMessagesLengthRef.current = messages.length;
   }, [messages, isTyping]);
 
   return (
