@@ -30,7 +30,7 @@ const GuideMode: React.FC<GuideModeProps> = ({
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const prevMessagesLengthRef = useRef(messages.length);
   
-  // Only auto-scroll when messages change (not on initial render)
+  // Only auto-scroll when messages change or typing status changes, not on initial render
   useEffect(() => {
     // Only scroll when new messages are added or typing status changes
     if (messages.length > prevMessagesLengthRef.current || 
@@ -44,11 +44,11 @@ const GuideMode: React.FC<GuideModeProps> = ({
   }, [messages, isTyping]);
 
   return (
-    <div className="flex flex-col h-full relative">
+    <div className="flex flex-col h-full relative overflow-hidden">
       {/* Content container that takes full height minus input height */}
-      <div className="absolute inset-0 bottom-[60px] flex flex-col overflow-hidden">
+      <div className="flex flex-col h-full">
         {/* Guide Mode Start Tour Button */}
-        <div className="p-4 pb-0">
+        <div className="p-4 pb-0 flex-shrink-0">
           <Button 
             onClick={startTour} 
             disabled={isRecording}
@@ -68,9 +68,9 @@ const GuideMode: React.FC<GuideModeProps> = ({
           </Button>
         </div>
         
-        {/* Chat Messages - scrollable area that fills all remaining space */}
-        <div className="flex-1 p-4 overflow-hidden flex flex-col">
-          <ScrollArea className="h-full min-h-0 flex-1 rounded-md border">
+        {/* Chat Messages - scrollable area that fills remaining space */}
+        <div className="flex-1 p-4 overflow-hidden min-h-0">
+          <ScrollArea className="h-full rounded-md border">
             <div className="p-4">
               <ChatMessages 
                 messages={messages}
@@ -80,16 +80,16 @@ const GuideMode: React.FC<GuideModeProps> = ({
             </div>
           </ScrollArea>
         </div>
-      </div>
-      
-      {/* Message Input - fixed at bottom with no gap */}
-      <div className="absolute bottom-0 left-0 right-0 h-[60px] bg-background">
-        <ChatInput
-          input={input}
-          setInput={setInput}
-          handleSendMessage={handleSendMessage}
-          handleKeyPress={handleKeyPress}
-        />
+        
+        {/* Message Input - fixed at bottom */}
+        <div className="p-4 pt-2 flex-shrink-0">
+          <ChatInput
+            input={input}
+            setInput={setInput}
+            handleSendMessage={handleSendMessage}
+            handleKeyPress={handleKeyPress}
+          />
+        </div>
       </div>
     </div>
   );
