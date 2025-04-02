@@ -3,7 +3,7 @@ import React from "react";
 import { cn } from "@/lib/utils";
 import { User } from "lucide-react";
 
-interface Message {
+export interface Message {
   id: string;
   content: string;
   isUser: boolean;
@@ -16,34 +16,32 @@ interface ChatMessagesProps {
   messagesEndRef: React.RefObject<HTMLDivElement>;
 }
 
-const ChatMessages: React.FC<ChatMessagesProps> = ({
+export const ChatMessages: React.FC<ChatMessagesProps> = ({
   messages,
   isTyping,
   messagesEndRef
 }) => {
   return (
-    <div className="flex-1 overflow-y-auto mb-4 pr-1">
-      <div className="space-y-4">
-        {messages.map(message => (
-          <ChatMessageItem
-            key={message.id}
-            message={message.content}
-            isUser={message.isUser}
-            timestamp={message.timestamp}
-          />
-        ))}
-        
-        {isTyping && (
-          <ChatMessageItem
-            message=""
-            isUser={false}
-            timestamp={new Date()}
-            isTyping={true}
-          />
-        )}
-        
-        <div ref={messagesEndRef} />
-      </div>
+    <div className="space-y-4">
+      {messages.map(message => (
+        <ChatMessageItem
+          key={message.id}
+          message={message.content}
+          isUser={message.isUser}
+          timestamp={message.timestamp}
+        />
+      ))}
+      
+      {isTyping && (
+        <ChatMessageItem
+          message=""
+          isUser={false}
+          timestamp={new Date()}
+          isTyping={true}
+        />
+      )}
+      
+      <div ref={messagesEndRef} />
     </div>
   );
 };
@@ -86,7 +84,7 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
           </div>
         ) : (
           <>
-            <p className="text-sm">{message}</p>
+            <p className="text-sm whitespace-pre-line">{message}</p>
             <p className="text-[10px] opacity-70 mt-1 text-right">
               {timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
             </p>
@@ -102,5 +100,3 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
     </div>
   );
 };
-
-export { ChatMessages, type Message };

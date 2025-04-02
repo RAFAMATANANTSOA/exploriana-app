@@ -2,23 +2,16 @@
 import React, { useState, useRef, useEffect } from "react";
 import AnimatedPage from "@/components/layout/AnimatedPage";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Map, Navigation } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useNavigate } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
-
-// Define message type
-interface Message {
-  id: string;
-  content: string;
-  isUser: boolean;
-  timestamp: Date;
-}
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { ChatMessages, Message } from "@/components/assistant/ChatMessage";
+import ChatInput from "@/components/assistant/ChatInput";
 
 const Assistant: React.FC = () => {
-  const [messages, setMessages] = useState<Message[]>([
+  const [guideMessages, setGuideMessages] = useState<Message[]>([
     {
       id: "1",
       content: "Hello! I'm your AI travel assistant. How can I help you today?",
@@ -26,13 +19,27 @@ const Assistant: React.FC = () => {
       timestamp: new Date()
     }
   ]);
+  
+  const [plannerMessages, setPlannerMessages] = useState<Message[]>([
+    {
+      id: "1",
+      content: "Welcome to the Travel Planner! Tell me where and when you want to travel, and I'll create a custom itinerary for you.",
+      isUser: false,
+      timestamp: new Date()
+    }
+  ]);
+  
+  const [activeMode, setActiveMode] = useState<"guide" | "planner">("guide");
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
-  const [isPlannerMode, setIsPlannerMode] = useState(false);
   const [showMapButton, setShowMapButton] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const isMobile = useIsMobile();
+
+  // Get appropriate messages based on active mode
+  const messages = activeMode === "guide" ? guideMessages : plannerMessages;
+  const setMessages = activeMode === "guide" ? setGuideMessages : setPlannerMessages;
 
   // Scroll to bottom whenever messages change
   useEffect(() => {
@@ -61,7 +68,7 @@ const Assistant: React.FC = () => {
       setIsTyping(false);
       
       // Add AI response based on the mode
-      if (isPlannerMode) {
+      if (activeMode === "planner") {
         const planResponses = [
           "Here's your 3-day itinerary for San Francisco:\n\nDay 1: Golden Gate Bridge, Fisherman's Wharf, and Pier 39\nDay 2: Alcatraz Island, Chinatown, and Union Square\nDay 3: Golden Gate Park, Twin Peaks, and Mission District",
           "I've created a 5-day Paris plan:\n\nDay 1: Eiffel Tower and Seine River Cruise\nDay 2: Louvre Museum and Tuileries Garden\nDay 3: Notre Dame and Latin Quarter\nDay 4: Montmartre and Sacré-Cœur\nDay 5: Versailles Day Trip"
@@ -113,7 +120,7 @@ const Assistant: React.FC = () => {
       timestamp: new Date()
     };
     
-    setMessages(prev => [...prev, userMessage]);
+    setGuideMessages(prev => [...prev, userMessage]);
     
     // Simulate AI response
     setIsTyping(true);
@@ -127,7 +134,7 @@ const Assistant: React.FC = () => {
         timestamp: new Date()
       };
       
-      setMessages(prev => [...prev, aiMessage]);
+      setGuideMessages(prev => [...prev, aiMessage]);
     }, 1500);
   };
 
@@ -139,44 +146,41 @@ const Assistant: React.FC = () => {
     <AnimatedPage>
       <div className={`page-container flex flex-col h-[calc(100vh-0px)] sm:h-[calc(100vh-96px)] ${isMobile ? 'pb-20' : ''}`}>
         {/* Header */}
-        <div className="mb-2 sticky top-0 z-10 pt-2 pb-0 bg-background">
+        <div className="mb-4 sticky top-0 z-10 pt-2 pb-0 bg-background">
           <h1 className="text-2xl font-bold">Travel Assistant</h1>
-          <p className="text-muted-foreground text-sm">Your personal travel companion</p>
-        </div>
-        
-        {/* Mode selector */}
-        <div className="flex items-center space-x-2 mb-4">
-          <Checkbox 
-            id="mode" 
-            checked={isPlannerMode}
-            onCheckedChange={(checked) => {
-              setIsPlannerMode(checked === true);
-              setMessages([{
-                id: "1",
-                content: isPlannerMode ? 
-                  "Hello! I'm your AI travel assistant. How can I help you today?" : 
-                  "Welcome to the Travel Planner! Tell me where and when you want to travel, and I'll create a custom itinerary for you.",
-                isUser: false,
-                timestamp: new Date()
-              }]);
-              setShowMapButton(false);
+          <p className="text-muted-foreground text-sm mb-4">Your personal travel companion</p>
+          
+          {/* Mode selector using ToggleGroup */}
+          <ToggleGroup 
+            type="single" 
+            value={activeMode}
+            onValueChange={(value) => {
+              if (value) setActiveMode(value as "guide" | "planner");
             }}
-          />
-          <label
-            htmlFor="mode"
-            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            className="w-full mb-4 glass-card p-1 rounded-full"
           >
-            {isPlannerMode ? "Planner Mode" : "Guide Mode"}
-          </label>
+            <ToggleGroupItem 
+              value="guide" 
+              className="flex-1 rounded-full data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
+            >
+              Guide Mode
+            </ToggleGroupItem>
+            <ToggleGroupItem 
+              value="planner" 
+              className="flex-1 rounded-full data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
+            >
+              Planner Mode
+            </ToggleGroupItem>
+          </ToggleGroup>
         </div>
         
         {/* Action Button (Start Tour or View Map) */}
         <Button 
-          onClick={isPlannerMode ? viewOnMap : startTour}
+          onClick={activeMode === "planner" ? viewOnMap : startTour}
           className="w-full mb-4"
-          disabled={isPlannerMode && !showMapButton}
+          disabled={activeMode === "planner" && !showMapButton}
         >
-          {isPlannerMode ? (
+          {activeMode === "planner" ? (
             <>
               <Map className="h-4 w-4 mr-2" />
               <span>View on Map</span>
@@ -192,68 +196,24 @@ const Assistant: React.FC = () => {
         {/* Chat container */}
         <div className="flex-1 min-h-0 overflow-hidden rounded-md border">
           <ScrollArea className="h-full pb-4">
-            <div className="p-4 space-y-4">
-              {/* Messages */}
-              {messages.map(message => (
-                <div
-                  key={message.id}
-                  className={`flex ${message.isUser ? "justify-end" : "justify-start"}`}
-                >
-                  <div
-                    className={`max-w-[80%] rounded-2xl p-3 ${
-                      message.isUser
-                        ? "bg-primary text-primary-foreground rounded-tr-none"
-                        : "glass-card rounded-tl-none"
-                    }`}
-                  >
-                    <p className="text-sm whitespace-pre-line">{message.content}</p>
-                    <p className="text-[10px] opacity-70 mt-1 text-right">
-                      {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                    </p>
-                  </div>
-                </div>
-              ))}
-              
-              {/* Typing indicator */}
-              {isTyping && (
-                <div className="flex justify-start">
-                  <div className="glass-card rounded-2xl rounded-tl-none p-3 max-w-[80%]">
-                    <div className="flex space-x-1 h-6 items-center px-2">
-                      <div className="w-2 h-2 rounded-full bg-current animate-bounce" style={{ animationDelay: "0ms" }}></div>
-                      <div className="w-2 h-2 rounded-full bg-current animate-bounce" style={{ animationDelay: "150ms" }}></div>
-                      <div className="w-2 h-2 rounded-full bg-current animate-bounce" style={{ animationDelay: "300ms" }}></div>
-                    </div>
-                  </div>
-                </div>
-              )}
-              
-              <div ref={messagesEndRef} />
+            <div className="p-4">
+              <ChatMessages 
+                messages={messages}
+                isTyping={isTyping}
+                messagesEndRef={messagesEndRef}
+              />
             </div>
           </ScrollArea>
         </div>
         
         {/* Input area */}
-        <div className={`p-4 ${isMobile ? 'mb-16' : ''}`}>
-          <div className="glass-card rounded-full p-1 flex items-center w-full">
-            <Input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyPress={handleKeyPress}
-              placeholder="Type a message..."
-              className="bg-transparent border-0 focus-visible:ring-0 focus-visible:ring-offset-0 flex-1"
-            />
-            <Button 
-              size="icon" 
-              className="rounded-full h-9 w-9 bg-primary text-primary-foreground hover:bg-primary/90"
-              onClick={handleSendMessage}
-              disabled={!input.trim()}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="22" y1="2" x2="11" y2="13"></line>
-                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-              </svg>
-            </Button>
-          </div>
+        <div className={`p-4 ${isMobile ? 'mb-16' : ''} ${isMobile ? 'fixed bottom-16 left-0 right-0 bg-background z-10' : ''}`}>
+          <ChatInput
+            input={input}
+            setInput={setInput}
+            handleSendMessage={handleSendMessage}
+            handleKeyPress={handleKeyPress}
+          />
         </div>
       </div>
     </AnimatedPage>
