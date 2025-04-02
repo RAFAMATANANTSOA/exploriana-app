@@ -9,6 +9,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { ChatMessages, Message } from "@/components/assistant/ChatMessage";
 import ChatInput from "@/components/assistant/ChatInput";
+import { cn } from "@/lib/utils";
 
 const Assistant: React.FC = () => {
   const [guideMessages, setGuideMessages] = useState<Message[]>([
@@ -34,6 +35,7 @@ const Assistant: React.FC = () => {
   const [isTyping, setIsTyping] = useState(false);
   const [showMapButton, setShowMapButton] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const isMobile = useIsMobile();
 
@@ -46,7 +48,7 @@ const Assistant: React.FC = () => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [messages]);
+  }, [messages, isTyping]);
 
   const handleSendMessage = () => {
     if (!input.trim()) return;
@@ -144,11 +146,11 @@ const Assistant: React.FC = () => {
 
   return (
     <AnimatedPage>
-      <div className={`page-container flex flex-col h-[calc(100vh-0px)] sm:h-[calc(100vh-96px)] ${isMobile ? 'pb-20' : ''}`}>
-        {/* Header */}
-        <div className="mb-4 sticky top-0 z-10 pt-2 pb-0 bg-background">
+      <div className="flex flex-col h-[100dvh]">
+        {/* Header - Fixed at top */}
+        <div className="p-4 pt-2 pb-2 bg-background/80 backdrop-blur-md sticky top-0 z-10">
           <h1 className="text-2xl font-bold">Travel Assistant</h1>
-          <p className="text-muted-foreground text-sm mb-4">Your personal travel companion</p>
+          <p className="text-muted-foreground text-sm mb-3">Your personal travel companion</p>
           
           {/* Mode selector using ToggleGroup */}
           <ToggleGroup 
@@ -157,7 +159,7 @@ const Assistant: React.FC = () => {
             onValueChange={(value) => {
               if (value) setActiveMode(value as "guide" | "planner");
             }}
-            className="w-full mb-4 glass-card p-1 rounded-full"
+            className="w-full mb-3 glass-card p-1 rounded-full"
           >
             <ToggleGroupItem 
               value="guide" 
@@ -172,42 +174,47 @@ const Assistant: React.FC = () => {
               Planner Mode
             </ToggleGroupItem>
           </ToggleGroup>
+        
+          {/* Action Button (Start Tour or View Map) */}
+          <Button 
+            onClick={activeMode === "planner" ? viewOnMap : startTour}
+            className="w-full"
+            disabled={activeMode === "planner" && !showMapButton}
+          >
+            {activeMode === "planner" ? (
+              <>
+                <Map className="h-4 w-4 mr-2" />
+                <span>View on Map</span>
+              </>
+            ) : (
+              <>
+                <Navigation className="h-4 w-4 mr-2" />
+                <span>Start Tour</span>
+              </>
+            )}
+          </Button>
         </div>
         
-        {/* Action Button (Start Tour or View Map) */}
-        <Button 
-          onClick={activeMode === "planner" ? viewOnMap : startTour}
-          className="w-full mb-4"
-          disabled={activeMode === "planner" && !showMapButton}
+        {/* Messages Container - Scrollable, Flex grows to fill space */}
+        <div 
+          className="flex-1 overflow-hidden px-4" 
+          ref={scrollAreaRef}
         >
-          {activeMode === "planner" ? (
-            <>
-              <Map className="h-4 w-4 mr-2" />
-              <span>View on Map</span>
-            </>
-          ) : (
-            <>
-              <Navigation className="h-4 w-4 mr-2" />
-              <span>Start Tour</span>
-            </>
-          )}
-        </Button>
-        
-        {/* Chat container */}
-        <div className="flex-1 min-h-0 overflow-hidden rounded-md border">
-          <ScrollArea className="h-full pb-4">
-            <div className="p-4">
-              <ChatMessages 
-                messages={messages}
-                isTyping={isTyping}
-                messagesEndRef={messagesEndRef}
-              />
-            </div>
+          <ScrollArea className="h-full pr-2">
+            <ChatMessages 
+              messages={messages}
+              isTyping={isTyping}
+              messagesEndRef={messagesEndRef}
+            />
+            <div className="h-4"></div> {/* Extra space at bottom of messages */}
           </ScrollArea>
         </div>
         
-        {/* Input area */}
-        <div className={`p-4 ${isMobile ? 'mb-16' : ''} ${isMobile ? 'fixed bottom-16 left-0 right-0 bg-background z-10' : ''}`}>
+        {/* Input Area - Fixed at bottom above navigation */}
+        <div className={cn(
+          "p-4 w-full bg-background/80 backdrop-blur-md",
+          isMobile ? "pb-20" : ""  // Extra padding on mobile to clear bottom nav
+        )}>
           <ChatInput
             input={input}
             setInput={setInput}

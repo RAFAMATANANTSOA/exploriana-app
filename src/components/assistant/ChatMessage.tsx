@@ -22,7 +22,7 @@ export const ChatMessages: React.FC<ChatMessagesProps> = ({
   messagesEndRef
 }) => {
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col space-y-4 w-full">
       {messages.map(message => (
         <ChatMessageItem
           key={message.id}
@@ -61,7 +61,7 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
 }) => {
   return (
     <div className={cn(
-      "flex w-full mb-4 animate-fade-in",
+      "flex w-full mb-3 animate-fade-in",
       isUser ? "justify-end" : "justify-start"
     )}>
       {!isUser && (
@@ -71,7 +71,7 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
       )}
       
       <div className={cn(
-        "max-w-[80%] rounded-2xl p-3",
+        "max-w-[85%] rounded-2xl p-3",
         isUser 
           ? "bg-primary text-primary-foreground rounded-tr-none" 
           : "glass-card rounded-tl-none"
