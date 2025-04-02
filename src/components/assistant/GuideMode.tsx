@@ -1,5 +1,5 @@
 
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect,useState } from "react";
 import { Message, ChatMessages } from "./ChatMessage";
 import ChatInput from "./ChatInput";
 import { Button } from "@/components/ui/button";
@@ -28,27 +28,27 @@ const GuideMode: React.FC<GuideModeProps> = ({
   startTour
 }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const prevMessagesLengthRef = useRef(messages.length);
-  
-  // Only auto-scroll when messages change or typing status changes, not on initial render
+  const [isFirstMessageSent, setIsFirstMessageSent] = useState(true); // Track if the first message has been sent
+
+  // Auto-scroll to bottom when messages change or a message is sent, but not on first load
   useEffect(() => {
-    // Only scroll when new messages are added or typing status changes
-    if (messages.length > prevMessagesLengthRef.current || 
-        (prevMessagesLengthRef.current === messages.length && isTyping !== undefined)) {
+    if (isFirstMessageSent) {
+      // Ne pas faire défiler lors du premier message
+      setIsFirstMessageSent(false);
+    } else {
       if (messagesEndRef.current) {
-        messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+        messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
       }
     }
-    
-    prevMessagesLengthRef.current = messages.length;
-  }, [messages, isTyping]);
+  }, [messages]); // Scroll only when messages change (not on first render)
+
 
   return (
     <div className="flex flex-col h-full relative overflow-hidden">
       {/* Content container that takes full height minus input height */}
       <div className="flex flex-col h-full">
         {/* Guide Mode Start Tour Button */}
-        <div className="p-4 pb-0 flex-shrink-0">
+        <div className="px-4 pt-1 pb-0 flex-shrink-0">
           <Button 
             onClick={startTour} 
             disabled={isRecording}
@@ -82,7 +82,7 @@ const GuideMode: React.FC<GuideModeProps> = ({
         </div>
         
         {/* Message Input - fixed at bottom */}
-        <div className="p-4 pt-2 flex-shrink-0">
+        <div className="p-4 pt-2 flex-shrink-0 mb-20">
           <ChatInput
             input={input}
             setInput={setInput}

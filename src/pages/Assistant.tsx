@@ -29,17 +29,19 @@ const Assistant: React.FC = () => {
   
   // Create a ref to control scroll position
   const contentRef = useRef<HTMLDivElement>(null);
+
+  const isMobile = window.innerWidth < 640;
   
-  // Reset scroll position when changing tabs
-  useEffect(() => {
-    if (contentRef.current) {
-      contentRef.current.scrollTop = 0;
-    }
-  }, [activeMode]);
+  // // Reset scroll position when changing tabs
+  // useEffect(() => {
+  //   if (contentRef.current) {
+  //     contentRef.current.scrollTop = 0;
+  //   }
+  // }, [activeMode]);
   
   return (
     <AnimatedPage>
-      <div className="page-container flex flex-col h-[calc(100vh-0px)] sm:h-[calc(100vh-96px)]">
+    <div className="page-container flex flex-col h-[calc(100vh-96px)] sm:h-[calc(100vh)]">
         <Header title="AI Assistant" subtitle="Your personal travel companion" />
 
         <Tabs 
@@ -60,7 +62,7 @@ const Assistant: React.FC = () => {
             </TabsTrigger>
           </TabsList>
           
-          <div ref={contentRef} className="flex-1 flex flex-col h-full overflow-hidden">
+          <div ref={contentRef} className="flex-1 flex flex-col h-100vh overflow-hidden">
             <TabsContent value="guide" className="flex-1 h-full m-0 overflow-hidden">
               <GuideMode 
                 messages={messages} 
